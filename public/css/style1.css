@@ -1,0 +1,242 @@
+body {
+	padding: 0;
+	margin: 0;
+	background: -moz-linear-gradient(-45deg, #183850 0, #183850 25%, #192c46 50%, #22254c 75%, #22254c 100%);
+	background: -webkit-linear-gradient(-45deg, #183850 0, #183850 25%, #192c46 50%, #22254c 75%, #22254c 100%);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+}
+*{box-sizing: border-box;}
+img {
+	vertical-align: middle;
+}
+.container {
+	width: 800px;
+	height: 650px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	margin: auto;
+	background: #fff;
+	border-radius: 5px;
+}
+
+.header {
+	padding: 15px 10px;
+	border-bottom: 1px solid #d9d9d9;
+	color: #b0b0b0;
+	font-weight: 600;
+}
+
+
+.chatting-zone .time {
+	color: #9d9d9d;
+	text-align: center;
+	margin: 10px 0 10px 0;
+}
+
+.chatting-zone .left,
+.chatting-zone .right {
+	overflow: hidden;
+}
+
+.chatting-zone .left img,
+.chatting-zone .right img {
+	width: 50px;
+	height: 50px;
+	border-radius: 100%;
+}
+
+.chatting-zone .bubble {
+	position: absolute;
+	right: 100%;
+	top: 13px;
+	width: 0;
+	height: 0;
+	border-width: 10px;
+	border-style: solid;
+	border-color: transparent;
+	border-right-color: currentColor;
+	color: #dddddd;
+}
+
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+::-webkit-scrollbar-track {
+	border-radius: 10px;
+	background-color: rgba(25, 147, 147, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background-color: rgba(25, 147, 147, 0.4);
+}
+
+.chat-thread {
+	margin: 0 auto 0 auto;
+	padding: 0 20px 0 0;
+	list-style: none;
+	/*overflow-y: scroll;*/
+	overflow-x: hidden;
+}
+
+.chat-thread li {
+	position: relative;
+	display: inline-block;
+	padding: 16px 20px 16px 20px;
+	margin: 0 0 20px 0;
+	font: 16px/20px 'Noto Sans', sans-serif;
+	border-radius: 10px;
+	background-color: rgba(25, 147, 147, 0.2);
+}
+
+.chat-thread li:after {
+	position: absolute;
+	top: 15px;
+	content: '';
+	width: 0;
+	height: 0;
+	border-top: 15px solid rgba(25, 147, 147, 0.2);
+}
+
+.chat-thread .right li {
+	float: right;
+	margin-right: 20px;
+	color: #0AD5C1;
+	max-width: 60%;
+}
+
+.chat-thread .right li:after {
+	border-right: 15px solid transparent;
+	right: -15px;
+}
+
+.chat-thread .left li {
+	float: left;
+	margin-left: 20px;
+	color: #0EC879;
+	max-width: 70%;
+}
+
+.chat-thread .left li:after {
+	border-left: 15px solid transparent;
+	left: -15px;
+}
+.chat-thread .left{
+	margin-left: 15px;
+}
+
+.chat-window {
+	position: fixed;
+	bottom: 18px;
+}
+
+.chat-window-message {
+	width: 100%;
+	height: 48px;
+	font: 32px/48px 'Noto Sans', sans-serif;
+	background: none;
+	color: #0AD5C1;
+	border: 0;
+	border-bottom: 1px solid rgba(25, 147, 147, 0.2);
+	outline: none;
+}
+
+/*李昕 before*/
+
+.top {
+	width: 100%;
+	height: 620px;
+}
+
+.top .to {
+	width: 400px;
+	height: 40px;
+	margin-top: 20px;
+	border: 1px solid red;
+}
+
+.bottom {
+	height: 200px;
+	border-top: 1px solid #d9d9d9;
+	padding: 20px;
+}
+
+#cont {
+	width: 100%;
+	height: 100px;
+	border: 0;
+	outline: none;
+	resize:none;
+	font-size: 16px;
+}
+
+.submit {
+	width: 80px;
+	height: 30px;
+	float: right;
+	color: #fff;
+	background-color: rgba(25, 147, 147, 1);
+	border: 0;
+	outline: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+.submit:hover {
+	background-color: rgba(25, 147, 147, 0.8);
+}
+/*end*/
+
+@media all and (max-width: 767px) {
+	.header{
+		padding: 5% 5%;
+	}
+	.chatting-zone{
+		padding: 0;
+		height: 85%;
+	}
+	.chat-thread {
+		width: 100%;
+		height: 100%;
+	}
+	.chat-window {
+		left: 5%;
+		width: 90%;
+	}
+	.container {
+		width: 100%;
+		height: 100%;
+		border-radius: 0;
+	}
+	.chat-thread .left{
+		margin-left: 10px;
+	}
+	.bottom {
+		height: 5%;
+		padding: 0;
+	}
+	#cont {
+		width: 77%;
+		height: 80%;
+	}
+	.submit {
+		width: 20%;
+		height: 100%;
+		float: right;
+	}
+}
+
+@media all and (min-width: 768px) {
+	.chat-thread {
+		width: 100%;
+		height: 430px;
+	}
+	.chat-window {
+		left: 25%;
+		width: 50%;
+	}
+}
