@@ -26,12 +26,9 @@ class IndexController extends Controller
     public function index(Request $request)
     {
         //  查询当前用户的好友
-        $my_friends = $this->friend_model->getFriends(['user1' => $request->session()->get('userInfo')->id, 'friends.status' => '1']);
-        $news = $this->news_model->getNews(['send_to' => $request->session()->get('userInfo')->id]);
-        foreach ($news as $k => $item) {
-            $news[$k]->created_at = $this->common->convertTime($item->created_at);
-        }
-        $unread = $this->news_model->getNews(['send_to' => $request->session()->get('userInfo')->id, 'status' => '0'], ['*'], true);
-        return view('index', ['my_friends' => $my_friends, 'news' => $news, 'unread' => $unread]);
+        $login_user = $request->session()->get('userInfo');
+        $my_friends = $this->friend_model->getFriends(['user1' => $login_user->id, 'friends.status' => '1']);
+
+        return view('index', ['my_friends' => $my_friends,]);
     }
 }

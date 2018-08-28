@@ -229,4 +229,7 @@ return [
 
     ],
 
+    'socket_url' => env('SOCKET_URL', ''),
+    'socket_port' => env('SOCKET_PORT', ''),
+
 ];

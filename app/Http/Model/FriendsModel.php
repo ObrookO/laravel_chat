@@ -20,7 +20,11 @@ class FriendsModel
      */
     public function getFriends($where)
     {
-        return DB::table('friends')->leftjoin('users', 'user2', '=', 'users.id')->where($where)->select('friends.*', 'users.username', 'users.motto', 'users.avatar')->get();
+        return DB::table('friends')
+            ->leftjoin('users', 'user2', '=', 'users.id')
+            ->where($where)
+            ->select('friends.*', 'users.username', 'users.motto', 'users.avatar')
+            ->get();
     }
 
     /**插入一条好友记录

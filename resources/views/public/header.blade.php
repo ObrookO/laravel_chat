@@ -2,7 +2,6 @@
 <html>
 
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -13,9 +12,14 @@
     <link href="/css/animate.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
     <style>
-        #news .modal-header {
-            padding-top: 10px;
-            padding-bottom: 10px;
+        .alert {
+            margin-top: 20px;
+        }
+
+        .system-news-alert .label {
+            margin-right: 5px;
+            font-size: 14px;
+            cursor: pointer;
         }
 
     </style>
@@ -71,33 +75,9 @@
                     <li class="dropdown">
                         <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#" aria-expanded="false">
                             <i class="fa fa-bell"></i>
-                            @if(!empty($unread))
-                                <span class="label label-primary news-num">{{ $unread }}</span>
-                            @endif
+                            <span class="label label-primary news-num"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-alerts news-list">
-                            @if(count($news) > 0)
-                                @foreach($news as $K=>$item)
-                                    <li class="@if($item->status) active @endif">
-                                        <a href="javascript:;" onclick="readNews(this)" data-id="{{ $item->id }}" data-status="{{ $item->status }}"
-                                           data-type="{{ $item->news_type }}">
-                                            <p class="news-content" style="display: none;">{{ $item->content }}</p>
-                                            <div>
-                                                <i class="fa fa-envelope fa-fw"></i> {{ $item->title }}
-                                                <span class="pull-right text-muted small">{{ $item->created_at }}</span>
-                                            </div>
-                                        </a>
-                                    </li>
-                                @endforeach
-                            @else
-                                <li>
-                                    <a href="javascript:;">
-                                        <div>
-                                            <i class="fa fa-envelope fa-fw"></i> 暂无消息
-                                        </div>
-                                    </a>
-                                </li>
-                            @endif
                         </ul>
                     </li>
                     <li>
@@ -107,6 +87,33 @@
                     </li>
                 </ul>
             </nav>
+        </div>
+
+        {{--错误信息的提示框--}}
+        <div class="alert alert-danger alert-dismissable hide" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <strong></strong>
+        </div>
+
+        {{--系统消息的提示框--}}
+        <div class="alert alert-info alert-dismissable system-news-alert hide" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <strong class="news-content">想把您加为好友</strong>
+            <span class="label label-danger pull-right refuse" onclick="refuseRequest(this)">拒绝</span>
+            <span class="label label-primary pull-right agree" onclick="passRequest(this)">同意</span>
+        </div>
+
+        {{--聊天消息的提示框--}}
+        <div class="alert alert-success alert-dismissable chat-news-alert hide" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <strong></strong>
+            <a href="" class="alert-link pull-right">查看</a>
         </div>
 
         @section('body')
@@ -156,26 +163,6 @@
     </div>
 </div>
 
-<!--系统消息的模态框-->
-<div class="modal inmodal fade" id="news" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" onclick="window.location.reload();"><span aria-hidden="true">&times;</span><span
-                            class="sr-only">Close</span></button>
-                <p class="modal-title">系统消息</p>
-            </div>
-            <div class="modal-body text-center">
-                <h3 class="news-content"></h3>
-                <div class="form-group friend-request-buttons" style="display: none;">
-                    <button class="btn btn-primary" onclick="passRequest()">同意</button>
-                    <button class="btn btn-danger" onclick="refuseRequest()">拒绝</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <script src="/js/jquery-2.1.1.js"></script>
 <script src="/js/bootstrap.min.js"></script>
@@ -185,8 +172,9 @@
 <script src="/js/inspinia.js"></script>
 <script>
     var ws;
+
     $(function () {
-        var ws_url = "{{ env('SOCKET_URL') . ':' . env('SOCKET_PORT') .'/'.session('userInfo')->username }}";
+        var ws_url = "{{ config('app.socket_url') . ':' . config('app.socket_port') .'/'.session('userInfo')->username }}";
         ws = new WebSocket('ws://' + ws_url);
 
         ws.onopen = function (event) {
@@ -194,25 +182,86 @@
         };
 
         ws.onmessage = function (event) {
-            console.log(event.data);
             try {
                 var data = JSON.parse(event.data);
-                if (data.news_type == 10100001) {
-                    $('#news .news-content').html(data.content);
-                    $('.friend-request-buttons').show();
-                    $('#news').modal();
+                switch (data.news_type) {
+                    //  好友请求
+                    case 10100001:
+                        $('.system-news-alert .news-content').text(data.content);
+                        $('.system-news-alert .refuse,.system-news-alert .agree').attr('data', data.send_by_id);
+                        $('.system-news-alert').removeClass('hide').addClass('in');
+                        setTimeout(function () {
+                            $('.system-news-alert').removeClass('in').addClass('hide');
+                        }, 10000);
+                        break;
+                    //    收到新的聊天信息
+                    case 10100004:
+                        if (window.location.pathname != '/chat/' + data.send_by_id) {
+                            $('.chat-news-alert strong').text(data.send_by_username + ': ' + data.content);
+                            $('.chat-news-alert .alert-link').attr('href', '/chat/' + data.send_by_id);
+                            $('.chat-news-alert').removeClass('hide').addClass('in');
+                        } else {
+                            var html = '<div class="chat-message left">' +
+                                '<img class="message-avatar" src="/img/a4.jpg" alt="">' +
+                                '<div class="message">' +
+                                '<span class="message-content">' + data.content + '</span>' +
+                                '</div>' +
+                                '</div>';
+                            $('.chat-discussion').append(html);
+                            $('.chat-discussion').scrollTop($('.chat-discussion')[0].scrollHeight);
+                        }
+                        break;
                 }
+
             } catch (e) {
                 console.log('An error occured');
             }
         };
 
         ws.onerror = function (event) {
-            alert('服务器连接失败');
-            window.location.reload();
+            $('.alert-danger strong').text('聊天服务器连接失败');
+            $('.alert-danger').removeClass('hide').addClass('in');
         };
+        getNews();
     });
 
+    /**
+     * 获取消息列表
+     */
+    function getNews() {
+        $.get('/api/news/list', function (res) {
+            console.log(res);
+            if (res.code == 200) {
+                if (res.data.list.length > 0) {
+                    var html = '';
+                    for (var i = 0; i < res.data.list.length; i++) {
+                        html += (res.data.list[i].status == 1 ? '<li class="active">' : '<li>') +
+                            '<a href="javascript:;" onclick="readNews(this)">' +
+                            '<div><i class="fa fa-envelope fa-fw"></i> ' + res.data.list[i].content +
+                            '<span class="pull-right text-muted small">' + res.data.list[i].created_at + '</span>' +
+                            '</div>' +
+                            '</a></li>';
+                    }
+                } else {
+                    var html = '<li>' +
+                        '<a href="javascript:;">' +
+                        '<div><i class="fa fa-envelope fa-fw"></i> 暂无消息</div' +
+                        '></a>' +
+                        '</li>';
+                }
+                if (res.data.unread) {
+                    $('.news-num').text(res.data.unread);
+                } else {
+                    $('.news-num').text('');
+                }
+                $('.news-list').html(html);
+            }
+        }, 'json');
+    }
+
+    /**
+     * 读消息
+     */
     function readNews(node) {
         var obj = $(node);
         if (obj.attr('data-status') == 0) {
@@ -253,11 +302,13 @@
                     if (res.code == 200) {
                         res.data.avatar ? $('.user-avatar').attr('src', res.data.avatart) : '';
                         res.data.motto ? $('.user-motto').text(res.data.motto) : '';
-                        if ("{{ session('userInfo')->username }}" == res.data.username) {
-                            $('.make-friend-button').hide();
-                        } else {
+
+                        if (res.data.can) {
                             $('.make-friend-button').show();
+                        } else {
+                            $('.make-friend-button').hide();
                         }
+
                         $('.search-result-username').text(res.data.username).attr('data-id', res.data.id);
                         $('.search-result-block').show();
                     } else {
@@ -275,11 +326,18 @@
         $.post('/api/news',
             {
                 _token: '{{ csrf_token() }}',
-                send_to: $('.search-result-username').attr('data-id'),
+                send_to_id: $('.search-result-username').attr('data-id'),
                 news_type: 10100001
             }, function (res) {
                 if (res.code == 200) {
-                    ws.send(JSON.stringify({send_to: $('.search-result-username').text(), content: res.data, news_type: 10100001}));
+                    ws.send(JSON.stringify({
+                        send_by_id: res.data.send_by_id,
+                        send_by_username: res.data.send_by_username,
+                        send_to_id: res.data.send_to_id,
+                        send_to_username: res.data.send_to_username,
+                        content: res.data.content,
+                        news_type: 10100001
+                    }));
                     $('.search-result-block').hide();
                     $('.notice').text('');
                     $('.success-info').text('您的好友请求已发送').show();
@@ -287,8 +345,8 @@
                         window.location.reload();
                     }, 1000);
                 } else {
-                    alert(res.message);
-                    window.location.reload();
+                    $('.alert-danger strong').text(res.message);
+                    $('.alert-danger').removeClass('hide').addClass('in');
                 }
             }, 'json');
     }
@@ -296,16 +354,17 @@
     /**
      *  同意好友请求
      */
-    function passRequest() {
+    function passRequest(node) {
         $.post('/api/news/process', {
             _token: '{{ csrf_token() }}',
-            send_by: $('#news .modal-body .request-from').attr('data-id'),
+            send_by_id: $(node).attr('data'),
             news_type: 10100002
         }, function (res) {
             if (res.code == 200) {
                 window.location.reload();
             } else {
-                alert(res.message);
+                $('.alert-danger strong').text(res.message);
+                $('.alert-danger').removeClass('hide').addClass('in');
             }
         }, 'json');
     }
@@ -313,16 +372,17 @@
     /**
      * 拒绝好友请求
      */
-    function refuseRequest() {
+    function refuseRequest(node) {
         $.post('/api/news/process', {
             _token: '{{ csrf_token() }}',
-            send_by: $('#news .modal-body .request-from').attr('data-id'),
+            send_by_id: $(node).attr('data'),
             news_type: 10100003
         }, function (res) {
             if (res.code == 200) {
                 window.location.reload();
             } else {
-                alert(res.message);
+                $('.alert-danger strong').text(res.message);
+                $('.alert-danger').removeClass('hide').addClass('in');
             }
         }, 'json');
     }

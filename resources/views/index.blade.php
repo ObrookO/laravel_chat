@@ -19,7 +19,7 @@
                 @foreach($my_friends as $k=>$friend)
                     <div class="col-lg-4">
                         <div class="contact-box">
-                            <a href="/chat/{{ $friend->id }}">
+                            <a href="/chat/{{ $friend->user2 }}">
                                 <div class="col-sm-4">
                                     <div class="text-center">
                                         <img alt="image" class="img-circle m-t-xs img-responsive" src="{{ !empty($friend->avatar) ? $friend->avatar: '/img/a3.jpg'}}">

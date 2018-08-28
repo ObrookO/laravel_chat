@@ -16,11 +16,13 @@ Route::group(['middleware' => 'login'], function () {
     Route::group(['prefix' => 'api'], function () {
         Route::get('friends/{username?}', 'FriendsController@searchUser');
         Route::post('news/', 'NewsController@store');
+        Route::get('news/list', 'NewsController@index');
         Route::get('news/read/{id}', 'NewsController@read')->where('id', '[0-9]+');
         Route::post('news/process', 'NewsController@process');
     });
 
     Route::get('/chat/{user_id}', 'ChatController@chat')->where('user_id', '[0-9]+');
+    Route::post('/chat/save', 'ChatController@save');
 });
 
 Route::any('/login', 'PublicController@login');
