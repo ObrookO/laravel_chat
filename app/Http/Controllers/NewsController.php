@@ -138,6 +138,7 @@ class NewsController extends Controller
                 'send_to' => $request->send_by_id,
                 'content' => $login_user->username . $this->news_type[$request->news_type],
                 'news_type' => $request->news_type,
+                'status' => '1',
                 'created_at' => time()
             ]);
             if ($update_result && $id) {

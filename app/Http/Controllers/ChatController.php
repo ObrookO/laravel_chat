@@ -62,6 +62,7 @@ class ChatController extends Controller
                 'news_from' => $login_user->id,
                 'news_to' => $request->send_to_id,
                 'message' => $request->data,
+                'type' => $request->content_type,
                 'created_at' => time()
             ];
             $id = $chat_record_model->newChatRecord($insert_data);

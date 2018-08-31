@@ -197,7 +197,7 @@
                     //    收到新的聊天信息
                     case 10100004:
                         if (window.location.pathname != '/chat/' + data.send_by_id) {
-                            $('.chat-news-alert strong').text(data.send_by_username + ': ' + data.content);
+                            $('.chat-news-alert strong').html(data.send_by_username + ': ' + data.content);
                             $('.chat-news-alert .alert-link').attr('href', '/chat/' + data.send_by_id);
                             $('.chat-news-alert').removeClass('hide').addClass('in');
                         } else {
@@ -235,9 +235,9 @@
                     var html = '';
                     for (var i = 0; i < res.data.list.length; i++) {
                         html += (res.data.list[i].status == 1 ? '<li class="active">' : '<li>') +
-                            '<a href="javascript:;" onclick="readNews(this)">' +
-                            '<div><i class="fa fa-envelope fa-fw"></i> ' + res.data.list[i].content +
-                            '<span class="pull-right text-muted small">' + res.data.list[i].created_at + '</span>' +
+                            '<a href="javascript:;" data-status="' + res.data.list[i].status + '" data-type="' + res.data.list[i].news_type + '" data="' + res.data.list[i].send_by + '" onclick="readNews(this)">' +
+                            '<div><i class="fa fa-envelope fa-fw"></i> <span class="news-content">' + res.data.list[i].content +
+                            '</span><span class="pull-right text-muted small">' + res.data.list[i].created_at + '</span>' +
                             '</div>' +
                             '</a></li>';
                     }
@@ -266,24 +266,10 @@
         if (obj.attr('data-status') == 0) {
             //  判断是否是好友申请
             if (obj.attr('data-type') == 10100001) {
-                $('#news .modal-body .news-content').html(obj.children('.news-content').text());
-                $('#news .friend-request-buttons').show();
-                $('#news').modal();
-            } else {
-                $.ajax({
-                    url: '/api/news/read/' + obj.attr('data-id'),
-                    method: 'get',
-                    dataType: 'json',
-                    success: function (res) {
-                        window.location.reload();
-                    },
-                    error: function (xhr, textStatus, e) {
-
-                    }
-                });
+                $('.system-news-alert .news-content').text(obj.find('.news-content').text());
+                $('.system-news-alert .refuse,.system-news-alert .agree').attr('data', obj.attr('data'));
+                $('.system-news-alert').removeClass('hide').addClass('in');
             }
-        } else {
-            window.location.reload();
         }
     }
 

@@ -183,12 +183,14 @@
             //  滚动条停留在最底端
             $('.chat-discussion').scrollTop($('.chat-discussion')[0].scrollHeight);
 
-            $('#message').keyup(function (event) {
+            $('#message').keydown(function (event) {
                 if (event.keyCode == 13) {
+                    event.preventDefault();
                     sendNews();
                 }
             });
 
+            //  在光标位置插入内容
             $.fn.insertText = function (text) {
                 var obj = $(this)[0];
                 var range, node;
@@ -226,6 +228,7 @@
                 _token: '{{ csrf_token() }}',
                 send_to_id: '{{ $user_id }}',
                 data: message,
+                content_type: 'text',
                 news_type: 10100004
             }, function (res) {
                 if (res.code == 200) {
