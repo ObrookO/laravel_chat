@@ -22,12 +22,12 @@ class NewsController extends Controller
         '10100003' => ' 已拒绝您的好友申请',
     ];
 
-    public function __construct()
+    public function __construct(UserModel $userModel, NewsModel $newsModel, FriendsModel $friendsModel, Common $common)
     {
-        $this->user_model = new UserModel();
-        $this->news_model = new NewsModel();
-        $this->friend_model = new FriendsModel();
-        $this->common = new Common();
+        $this->user_model = $userModel;
+        $this->news_model = $newsModel;
+        $this->friend_model = $friendsModel;
+        $this->common = $common;
     }
 
     /**
@@ -40,7 +40,7 @@ class NewsController extends Controller
         $send_to_user = $this->user_model->getUserInfo(['id' => $request->send_to_id]);
 
         if ($send_to_user) {
-            $login_user = $request->session()->get('userInfo');
+            $login_user = session('userInfo');
 
             try {
                 $id = $this->news_model->insertNews([
@@ -81,7 +81,7 @@ class NewsController extends Controller
      */
     public function index(Request $request)
     {
-        $login_user = $request->session()->get('userInfo');
+        $login_user = session('userInfo');
         $news = $this->news_model->getNews(['send_to' => $login_user->id]);
         foreach ($news as $k => $item) {
             $news[$k]->created_at = $this->common->convertTime($item->created_at);
@@ -121,7 +121,7 @@ class NewsController extends Controller
     public function process(Request $request)
     {
         try {
-            $login_user = $request->session()->get('userInfo');
+            $login_user = session('userInfo');
             $all_request_news = $this->news_model->getNews([
                 'send_by' => $request->send_by_id,
                 'send_to' => $login_user->id,

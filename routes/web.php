@@ -12,19 +12,19 @@
 */
 
 Route::group(['middleware' => 'login'], function () {
-    Route::get('/', 'IndexController@index');
+    Route::get('/', 'IndexController@index')->name('index');
     Route::group(['prefix' => 'api'], function () {
-        Route::get('friends/{username?}', 'FriendsController@searchUser');
-        Route::post('news/', 'NewsController@store');
-        Route::get('news/list', 'NewsController@index');
-        Route::get('news/read/{id}', 'NewsController@read')->where('id', '[0-9]+');
-        Route::post('news/process', 'NewsController@process');
+        Route::get('friends/{username?}', 'FriendController@searchUser')->name('friends.search');
+        Route::post('news/', 'NewsController@store')->name('news.store');
+        Route::get('news/list', 'NewsController@index')->name('news.list');
+        Route::get('news/read/{id}', 'NewsController@read')->where('id', '[0-9]+')->name('news.read');
+        Route::post('news/process', 'NewsController@process')->name('news.process');
     });
 
     Route::get('/chat/{user_id}', 'ChatController@chat')->where('user_id', '[0-9]+');
     Route::post('/chat/save', 'ChatController@save');
 });
 
-Route::any('/login', 'PublicController@login');
-Route::any('/register', 'PublicController@register');
-Route::any('/logout', 'PublicController@logout');
+Route::any('/login', 'PublicController@login')->name('login');
+Route::any('/register', 'PublicController@register')->name('register');
+Route::get('/logout', 'PublicController@logout')->name('logout');

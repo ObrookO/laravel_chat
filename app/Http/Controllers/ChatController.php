@@ -13,11 +13,11 @@ class ChatController extends Controller
     private $user_model;
     private $chat_record_model;
 
-    public function __construct()
+    public function __construct(NewsModel $newsModel, UserModel $userModel, ChatRecordModel $chatRecordModel)
     {
-        $this->news_model = new NewsModel();
-        $this->user_model = new UserModel();
-        $this->chat_record_model = new ChatRecordModel();
+        $this->news_model = $newsModel;
+        $this->user_model = $userModel;
+        $this->chat_record_model = $chatRecordModel;
     }
 
     /**
@@ -29,7 +29,7 @@ class ChatController extends Controller
     public function chat(Request $request, $user_id)
     {
         $user_info = $this->user_model->getUserInfo(['id' => $user_id]);
-        $login_user = $request->session()->get('userInfo');
+        $login_user = session('userInfo');
         if ($user_info) {
             $chat_records = $this->chat_record_model->getChatRecords($user_id, $login_user->id);
 
@@ -51,7 +51,7 @@ class ChatController extends Controller
     public function save(Request $request)
     {
         $user_info = $this->user_model->getUserInfo(['id' => $request->send_to_id]);
-        $login_user = $request->session()->get('userInfo');
+        $login_user = session('userInfo');
 
         if ($user_info) {
             if (!$request->data) {

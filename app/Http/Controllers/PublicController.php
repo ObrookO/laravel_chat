@@ -7,6 +7,13 @@ use App\Http\Model\UserModel;
 
 class PublicController extends Controller
 {
+    private $user_model;
+
+    public function __construct(UserModel $userModel)
+    {
+        $this->user_model = $userModel;
+    }
+
     public function login(Request $request)
     {
         if ($request->method() == 'GET') {
@@ -22,15 +29,12 @@ class PublicController extends Controller
                 'password.required' => '请输入密码',
             ]);
 
-            $user_model = new UserModel();
-            $user_info = $user_model->getUserInfo(['username' => $request->input('username')]);
+            $user_info = $this->user_model->getUserInfo(['username' => $request->username]);
             if ($user_info) {
-                if (decrypt($user_info->password) != $request->input('password')) {
+                if (decrypt($user_info->password) != $request->password) {
                     return json_encode(['code' => 401, 'message' => '密码错误']);
                 } else {
-                    $request->session()->put('is_login', true);
-//                    $request->session()->put('username', $user_info->username);
-                    $request->session()->put('userInfo', $user_info);
+                    session(['is_login' => true, 'userInfo' => $user_info]);
                     return json_encode(['code' => 200, 'message' => 'OK']);
                 }
             } else {
@@ -57,8 +61,7 @@ class PublicController extends Controller
                 'password.regex' => '密码由数字、字母、_ 组成，长度在6-16之间',
             ]);
 
-            $user_model = new UserModel();
-            $id = $user_model->newUser(['username' => $request->username, 'password' => encrypt($request->password), 'created_at' => time()]);
+            $id = $this->user_model->newUser(['username' => $request->username, 'password' => encrypt($request->password), 'created_at' => time()]);
             if ($id) {
                 return json_encode(['code' => 200, 'message' => 'OK']);
             } else {
@@ -69,7 +72,7 @@ class PublicController extends Controller
 
     public function logout(Request $request)
     {
-        $request->session()->remove('userInfo');
-        return redirect('/login');
+        session()->forget(['is_login', 'userInfo']);
+        return redirect(route('login'));
     }
 }

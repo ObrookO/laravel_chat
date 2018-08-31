@@ -229,8 +229,7 @@
      * 获取消息列表
      */
     function getNews() {
-        $.get('/api/news/list', function (res) {
-            console.log(res);
+        $.get("{{ route('news.list') }}", function (res) {
             if (res.code == 200) {
                 if (res.data.list.length > 0) {
                     var html = '';
@@ -323,7 +322,7 @@
      * 发送好友请求
      */
     function sendFriendRequest() {
-        $.post('/api/news',
+        $.post("{{ route('news.store') }}",
             {
                 _token: '{{ csrf_token() }}',
                 send_to_id: $('.search-result-username').attr('data-id'),
@@ -355,7 +354,7 @@
      *  同意好友请求
      */
     function passRequest(node) {
-        $.post('/api/news/process', {
+        $.post("{{ route('news.process') }}", {
             _token: '{{ csrf_token() }}',
             send_by_id: $(node).attr('data'),
             news_type: 10100002
@@ -373,7 +372,7 @@
      * 拒绝好友请求
      */
     function refuseRequest(node) {
-        $.post('/api/news/process', {
+        $.post("{{ route('news.process') }}", {
             _token: '{{ csrf_token() }}',
             send_by_id: $(node).attr('data'),
             news_type: 10100003

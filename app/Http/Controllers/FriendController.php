@@ -6,15 +6,15 @@ use App\Http\Model\FriendsModel;
 use App\Http\Model\UserModel;
 use Illuminate\Http\Request;
 
-class FriendsController extends Controller
+class FriendController extends Controller
 {
     private $user_model;
     private $friends_model;
 
-    public function __construct()
+    public function __construct(UserModel $userModel, FriendsModel $friendsModel)
     {
-        $this->user_model = new UserModel();
-        $this->friends_model = new FriendsModel();
+        $this->user_model = $userModel;
+        $this->friends_model = $friendsModel;
     }
 
     /**
@@ -34,7 +34,7 @@ class FriendsController extends Controller
             return json_encode(['code' => 401, 'message' => '用户不存在']);
         } else {
             $can = true;
-            $login_user = $request->session()->get('userInfo');
+            $login_user = session('userInfo');
             $my_friends = $this->friends_model->getFriends(['user1' => $login_user->id])->pluck('username');
 
             if ($username == $login_user->username) {
