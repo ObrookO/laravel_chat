@@ -5,11 +5,11 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>INSPINIA | 404 Error</title>
+    <title>S、L 聊天系统</title>
 
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link rel="icon" href="/chat.ico" type="image/icon">
 
     <link href="/css/animate.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
@@ -22,11 +22,9 @@
 <div class="middle-box text-center animated fadeInDown">
     <h1>404</h1>
 
-    @if($message)
-        <h2 class="font-bold">
-            {{ $message }}
-        </h2>
-    @endif
+    <h2 class="font-bold">
+        {{ $message or '您访问的页面不存在'}}
+    </h2>
 
     <a href="/">返回首页</a>
 </div>

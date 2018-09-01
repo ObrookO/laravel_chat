@@ -171,6 +171,7 @@
     <script src="/js/jquery.emoticons.js?v={{ time() }}"></script>
     <script>
         $(function () {
+            highlightMenu('/friends');
             //  表情控制
             $.emoticons({
                 'activeCls': 'trigger-active',

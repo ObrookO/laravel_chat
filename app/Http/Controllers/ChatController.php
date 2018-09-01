@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Model\ChatRecordModel;
+use App\Http\Model\FriendsModel;
 use App\Http\Model\NewsModel;
 use App\Http\Model\UserModel;
 use Illuminate\Http\Request;
@@ -11,12 +12,14 @@ class ChatController extends Controller
 {
     private $news_model;
     private $user_model;
+    private $friends_model;
     private $chat_record_model;
 
-    public function __construct(NewsModel $newsModel, UserModel $userModel, ChatRecordModel $chatRecordModel)
+    public function __construct(NewsModel $newsModel, UserModel $userModel, FriendsModel $friendsModel, ChatRecordModel $chatRecordModel)
     {
         $this->news_model = $newsModel;
         $this->user_model = $userModel;
+        $this->friends_model = $friendsModel;
         $this->chat_record_model = $chatRecordModel;
     }
 
@@ -30,14 +33,21 @@ class ChatController extends Controller
     {
         $user_info = $this->user_model->getUserInfo(['id' => $user_id]);
         $login_user = session('userInfo');
-        if ($user_info) {
-            $chat_records = $this->chat_record_model->getChatRecords($user_id, $login_user->id);
 
-            return view('chat', [
-                'user_id' => $user_id,
-                'username' => $user_info->username,
-                'records' => $chat_records
-            ]);
+        if ($user_info) {
+            $is_friend = $this->friends_model->getFriends(['user1' => $login_user->id, 'user2' => $user_id]);
+            if (count($is_friend)) {
+                $chat_records = $this->chat_record_model->getChatRecords($user_id, $login_user->id);
+
+                return view('chat', [
+                    'user_id' => $user_id,
+                    'username' => $user_info->username,
+                    'records' => $chat_records
+                ]);
+            } else {
+                return view('errors.404', ['message' => '只有好友才能发送消息哟']);
+            }
+
         } else {
             return view('errors.404', ['message' => '用户不存在']);
         }
@@ -86,6 +96,11 @@ class ChatController extends Controller
         }
     }
 
+    /**
+     * 上传聊天图片
+     * @param Request $request
+     * @return string
+     */
     public function uploadImg(Request $request)
     {
         $file = $request->file('image');

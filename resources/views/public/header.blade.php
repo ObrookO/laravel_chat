@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>S、L 聊天系统| 主页</title>
+    <title>S、L 聊天系统</title>
     <link rel="icon" href="/chat.ico" type="image/x-icon">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -48,8 +48,11 @@
                     </div>
                     <div class="logo-element">Chat</div>
                 </li>
-                <li class="active">
-                    <a href="/"><i class="fa fa-user"></i> <span class="nav-label">好友</span></a>
+                <li>
+                    <a href="{{ route('index') }}"><i class="fa fa-home"></i>首页</a>
+                </li>
+                <li>
+                    <a href="{{ route('friends.index') }}"><i class="fa fa-user"></i> <span class="nav-label">好友</span></a>
                 </li>
                 <li>
                     <a href=""><i class="fa fa-users"></i> <span class="nav-label">群组</span> <span class="fa arrow"></span></a>
@@ -227,6 +230,13 @@
         };
         getNews();
     });
+
+    /**
+     * 高亮侧边栏
+     */
+    function highlightMenu(url) {
+        $('#side-menu').find('a[href="http://' + window.location.host + url + '"]').parent().addClass('active').siblings().removeClass('active');
+    }
 
     /**
      * 获取消息列表

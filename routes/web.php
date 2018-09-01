@@ -13,6 +13,7 @@
 
 Route::group(['middleware' => 'login'], function () {
     Route::get('/', 'IndexController@index')->name('index');
+    Route::get('/friends', 'FriendController@friends')->name('friends.index');
     Route::group(['prefix' => 'api'], function () {
         Route::get('friends/{username?}', 'FriendController@searchUser')->name('friends.search');
         Route::post('news/', 'NewsController@store')->name('news.store');
