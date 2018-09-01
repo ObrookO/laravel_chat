@@ -112,8 +112,10 @@
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
+            <a href="javascript:;" class="alert-link pull-right">查看</a>
+
+            <h4></h4>
             <strong></strong>
-            <a href="" class="alert-link pull-right">查看</a>
         </div>
 
         @section('body')
@@ -197,7 +199,8 @@
                     //    收到新的聊天信息
                     case 10100004:
                         if (window.location.pathname != '/chat/' + data.send_by_id) {
-                            $('.chat-news-alert strong').html(data.send_by_username + ': ' + data.content);
+                            $('.chat-news-alert h4').html(data.send_by_username + ': ');
+                            $('.chat-news-alert strong').html(data.content);
                             $('.chat-news-alert .alert-link').attr('href', '/chat/' + data.send_by_id);
                             $('.chat-news-alert').removeClass('hide').addClass('in');
                         } else {

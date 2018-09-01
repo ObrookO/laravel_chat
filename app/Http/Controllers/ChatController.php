@@ -85,4 +85,30 @@ class ChatController extends Controller
             return json_encode(['code' => 400, 'message' => '用户不存在']);
         }
     }
+
+    public function uploadImg(Request $request)
+    {
+        $file = $request->file('image');
+        if (!$file) {
+            return json_encode(['code' => 400, 'message' => '请上传图片']);
+        }
+
+        $max_size = 2 * 1024 * 1024;
+        $allow_ext = ['jpg', 'jpeg', 'png', 'gif'];
+        $size = $file->getSize();
+        $ext = $file->getClientOriginalExtension();
+        if (!in_array($ext, $allow_ext)) {
+            return json_encode(['code' => 401, 'message' => '只能上传jpg,jpeg,png,gif格式的图片']);
+        }
+        if ($size > $max_size || !$size) {
+            return json_encode(['code' => 402, 'message' => '图片最大为2M']);
+        }
+
+        $path = $file->store('chat');
+        if ($path) {
+            return json_encode(['code' => 200, 'message' => 'OK', 'data' => '/upload/' . $path]);
+        } else {
+            return json_encode(['code' => 403, 'message' => '图片上传失败']);
+        }
+    }
 }

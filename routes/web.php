@@ -22,6 +22,7 @@ Route::group(['middleware' => 'login'], function () {
     });
 
     Route::get('/chat/{user_id}', 'ChatController@chat')->where('user_id', '[0-9]+');
+    Route::post('/chat/upload', 'ChatController@uploadImg')->name('chat.upload');
     Route::post('/chat/save', 'ChatController@save');
 });
 

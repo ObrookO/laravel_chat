@@ -3,7 +3,8 @@
 @section('style')
     <style>
         #message {
-            resize: none;
+            height: 140px !important;
+            overflow: auto;
             border-bottom-left-radius: 5px;
             border-bottom-right-radius: 5px;
             border: 1px solid lightblue;
@@ -18,13 +19,7 @@
             width: 525px;
         }
 
-        /*.emoticons .publisher {*/
-        /*padding-bottom: 10px;*/
-        /*margin-bottom: 10px;*/
-        /*border-bottom: 1px dotted #dbdbdb;*/
-        /*}*/
-
-        .emoticons .publisher .trigger {
+        .emoticons .publisher a {
             font-size: 20px;
             font-weight: bold;
             color: #666;
@@ -150,7 +145,13 @@
                                     <div class="form-group">
                                         <div class="emoticons">
                                             <div class="publisher">
-                                                <p><a href="javascript:;" class="trigger">☺</a></p>
+                                                <a href="javascript:;">
+                                                    <i class="fa fa-smile-o trigger"></i>
+                                                </a>
+                                                <a href="javascript:;" onclick="$('#image').click()">
+                                                    <i class="fa fa-image"></i>
+                                                </a>
+                                                <input type="file" name="" id="image" onchange="uploadImg(this)" accept="image/jpeg,image/png,image/gif" style="display: none;">
                                             </div>
                                         </div>
                                         <div class="form-control message-input" id="message" contenteditable></div>
@@ -182,7 +183,7 @@
             });
             //  滚动条停留在最底端
             $('.chat-discussion').scrollTop($('.chat-discussion')[0].scrollHeight);
-
+            //  回车发送消息
             $('#message').keydown(function (event) {
                 if (event.keyCode == 13) {
                     event.preventDefault();
@@ -220,10 +221,43 @@
             }
         });
 
+        /**
+         * 上传聊天图片
+         */
+        function uploadImg(node) {
+            if (node.files.length) {
+                var fd = new FormData();
+                fd.append('_token', '{{ csrf_token() }}');
+                fd.append('image', node.files[0]);
+                $.ajax({
+                    url: "{{ route('chat.upload') }}",
+                    method: 'post',
+                    dataType: 'json',
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    success: function (res) {
+                        if (res.code == 200) {
+                            $('#message').insertText('<img height="80" src="' + res.data + '">');
+                        } else {
+                            $('#image').val('');
+                            $('.alert-danger strong').text(res.message);
+                            $('.alert-danger').removeClass('hide').addClass('in');
+                            setTimeout(function () {
+                                $('.alert-danger').removeClass('in').addClass('hide');
+                            }, 2000);
+                        }
+                    }
+                });
+            }
+        }
+
+        /**
+         * 发送消息
+         */
         function sendNews() {
             var message = $('#message').html();
 
-            $('#message').html('');
             $.post('/chat/save', {
                 _token: '{{ csrf_token() }}',
                 send_to_id: '{{ $user_id }}',
@@ -249,6 +283,8 @@
 
                     $('.chat-discussion').append(html);
                     $('.chat-discussion').scrollTop($('.chat-discussion')[0].scrollHeight);
+                    $('#message').html('');
+                    $('#image').val('');
                 } else {
                     $('.alert-danger strong').text(res.message);
                     $('.alert-danger').removeClass('hide').addClass('in');
