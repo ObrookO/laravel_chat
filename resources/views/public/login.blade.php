@@ -20,10 +20,10 @@
         <form class="m-t" role="form" id="login-form" action="" method="post">
             {{ csrf_field() }}
             <div class="form-group">
-                <input type="text" name="username" class="form-control" placeholder="用户名">
+                <input type="text" name="username" class="form-control" placeholder="用户名" onkeydown="if(event.keyCode =='13'){checkLogin()}">
             </div>
             <div class="form-group">
-                <input type="password" name="password" class="form-control" placeholder="密码">
+                <input type="password" name="password" class="form-control" placeholder="密码" onkeydown="if(event.keyCode == '13'){checkLogin()}">
             </div>
             <p class="text-danger notice"></p>
             <button type="button" class="btn btn-primary block full-width m-b" onclick="checkLogin()">登录</button>

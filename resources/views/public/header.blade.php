@@ -49,7 +49,7 @@
                     <div class="logo-element">Chat</div>
                 </li>
                 <li>
-                    <a href="{{ route('index') }}"><i class="fa fa-home"></i>首页</a>
+                    <a href="{{ route('index') }}"><i class="fa fa-home"></i><span class="nav-label">首页</span></a>
                 </li>
                 <li>
                     <a href="{{ route('friends.index') }}"><i class="fa fa-user"></i> <span class="nav-label">好友</span></a>
@@ -82,6 +82,9 @@
                         </a>
                         <ul class="dropdown-menu dropdown-alerts news-list">
                         </ul>
+                    </li>
+                    <li>
+                        <img class="img-circle" width="40" src="/img/a3.jpg" alt="">
                     </li>
                     <li>
                         <a href="/logout">
@@ -242,7 +245,7 @@
      * 获取消息列表
      */
     function getNews() {
-        $.get("{{ route('news.list') }}", function (res) {
+        $.get("{{ route('news.index') }}", function (res) {
             if (res.code == 200) {
                 if (res.data.list.length > 0) {
                     var html = '';
@@ -293,7 +296,7 @@
         var username = $('#username').val();
         if (username) {
             $.ajax({
-                url: '/api/friends/' + username,
+                url: '/api/users/' + username,
                 method: 'get',
                 dataType: 'json',
                 success: function (res) {
@@ -353,7 +356,7 @@
      *  同意好友请求
      */
     function passRequest(node) {
-        $.post("{{ route('news.process') }}", {
+        $.post("{{ route('news.process_request') }}", {
             _token: '{{ csrf_token() }}',
             send_by_id: $(node).attr('data'),
             news_type: 10100002
@@ -371,7 +374,7 @@
      * 拒绝好友请求
      */
     function refuseRequest(node) {
-        $.post("{{ route('news.process') }}", {
+        $.post("{{ route('news.process_request') }}", {
             _token: '{{ csrf_token() }}',
             send_by_id: $(node).attr('data'),
             news_type: 10100003

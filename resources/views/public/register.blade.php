@@ -20,11 +20,11 @@
         <form class="m-t" role="form" id="register-form" action="" method="post">
             {{ csrf_field() }}
             <div class="form-group">
-                <input type="text" name="username" class="form-control" placeholder="用户名">
+                <input type="text" name="username" class="form-control" placeholder="用户名" onkeydown="if(event.keyCode == '13'){checkRegister()}">
             </div>
 
             <div class="form-group">
-                <input type="password" name="password" class="form-control" placeholder="密码">
+                <input type="password" name="password" class="form-control" placeholder="密码" onkeydown="if(event.keyCode == '13'){checkRegister()}">
             </div>
             <p class="text-danger notice"></p>
 

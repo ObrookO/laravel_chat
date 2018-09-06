@@ -31,7 +31,39 @@ class NewsController extends Controller
     }
 
     /**
-     * 新增消息
+     * 获取消息列表
+     * @return string
+     */
+    public function index()
+    {
+        $login_user = session('userInfo');
+        $news = $this->news_model->getNews(['send_to' => $login_user->id]);
+        foreach ($news as $k => $item) {
+            $news[$k]->created_at = $this->common->convertTime($item->created_at);
+        }
+
+        $unread = $this->news_model->getNews(['send_to' => $login_user->id, 'status' => '0'], ['*'], true);
+
+        return json_encode([
+            'code' => 200,
+            'message' => 'OK',
+            'data' => [
+                'unread' => $unread,
+                'list' => $news->toArray(),
+            ]
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+
+    }
+
+    /**
+     * 保存消息（具体方法）
      * @param Request $request
      * @return string
      */
@@ -75,50 +107,44 @@ class NewsController extends Controller
     }
 
     /**
-     * 获取消息列表
-     * @param Request $request
-     * @return string
+     * Display the specified resource.
      */
-    public function index(Request $request)
+    public function show()
     {
-        $login_user = session('userInfo');
-        $news = $this->news_model->getNews(['send_to' => $login_user->id]);
-        foreach ($news as $k => $item) {
-            $news[$k]->created_at = $this->common->convertTime($item->created_at);
-        }
 
-        $unread = $this->news_model->getNews(['send_to' => $login_user->id, 'status' => '0'], ['*'], true);
-
-        return json_encode([
-            'code' => 200,
-            'message' => 'OK',
-            'data' => [
-                'unread' => $unread,
-                'list' => $news->toArray(),
-            ]
-        ]);
     }
 
     /**
-     * 读消息
-     * @param $id
-     * @return string
+     * Show the form for editing the specified resource.
      */
-    public function read($id)
+    public function edit($id)
     {
-        $news = $this->news_model->getNews(['id' => $id, 'status' => '0']);
-        if (count($news)) {
-            $this->news_model->updateNews(['id' => $news[0]->id], ['status' => '1']);
-        }
-        return json_encode(['code' => 200, 'message' => 'OK']);
+
     }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $id)
+    {
+
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id)
+    {
+
+    }
+
 
     /**
      * 处理同意/拒绝好友请求
      * @param Request $request
      * @return string
      */
-    public function process(Request $request)
+    public function processFriendRequest(Request $request)
     {
         try {
             $login_user = session('userInfo');

@@ -13,14 +13,14 @@
 
 Route::group(['middleware' => 'login'], function () {
     Route::get('/', 'IndexController@index')->name('index');
-    Route::get('/friends', 'FriendController@friends')->name('friends.index');
+    Route::get('/friends', 'FriendController@getFriends')->name('friends.index');
     Route::group(['prefix' => 'api'], function () {
-        Route::get('friends/{username?}', 'FriendController@searchUser')->name('friends.search');
-        Route::post('news/', 'NewsController@store')->name('news.store');
-        Route::get('news/list', 'NewsController@index')->name('news.list');
-        Route::get('news/read/{id}', 'NewsController@read')->where('id', '[0-9]+')->name('news.read');
-        Route::post('news/process', 'NewsController@process')->name('news.process');
+        Route::get('users/{username?}', 'UserController@searchUser')->name('users.search');
+        Route::resource('news', 'NewsController', ['only' => ['index', 'store']]);
     });
+
+    //  处理好友请求
+    Route::post('/news/process/request', 'NewsController@processFriendRequest')->name('news.process_request');
 
     Route::get('/chat/{user_id}', 'ChatController@chat')->where('user_id', '[0-9]+');
     Route::post('/chat/upload', 'ChatController@uploadImg')->name('chat.upload');
