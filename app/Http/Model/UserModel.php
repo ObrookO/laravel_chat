@@ -21,4 +21,9 @@ class UserModel
     {
         return DB::table('users')->insertGetId($data);
     }
+
+    public function updateUser($where, $data)
+    {
+        return DB::table('users')->where($where)->update($data);
+    }
 }

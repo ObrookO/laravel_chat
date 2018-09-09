@@ -84,7 +84,7 @@
                         </ul>
                     </li>
                     <li>
-                        <img class="img-circle" width="40" src="/img/a3.jpg" alt="">
+                        <a href="{{ route('users.edit',['id'=>session('userInfo')->id]) }}"><img class="img-circle" height="40" width="40" src="{{ session('userInfo')->avatar ? session('userInfo')->avatar : '/img/a3.jpg' }}" alt=""></a>
                     </li>
                     <li>
                         <a href="/logout">

@@ -6,6 +6,7 @@ use App\Http\Model\ChatRecordModel;
 use App\Http\Model\FriendsModel;
 use App\Http\Model\NewsModel;
 use App\Http\Model\UserModel;
+use App\Http\Tools\Tool;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
@@ -14,13 +15,16 @@ class ChatController extends Controller
     private $user_model;
     private $friends_model;
     private $chat_record_model;
+    private $tool;
 
-    public function __construct(NewsModel $newsModel, UserModel $userModel, FriendsModel $friendsModel, ChatRecordModel $chatRecordModel)
+    public function __construct(NewsModel $newsModel, UserModel $userModel, FriendsModel $friendsModel, ChatRecordModel $chatRecordModel, Tool $tool)
     {
         $this->news_model = $newsModel;
         $this->user_model = $userModel;
         $this->friends_model = $friendsModel;
         $this->chat_record_model = $chatRecordModel;
+
+        $this->tool = $tool;
     }
 
     /**
@@ -104,26 +108,6 @@ class ChatController extends Controller
     public function uploadImg(Request $request)
     {
         $file = $request->file('image');
-        if (!$file) {
-            return json_encode(['code' => 400, 'message' => '请上传图片']);
-        }
-
-        $max_size = 2 * 1024 * 1024;
-        $allow_ext = ['jpg', 'jpeg', 'png', 'gif'];
-        $size = $file->getSize();
-        $ext = $file->getClientOriginalExtension();
-        if (!in_array($ext, $allow_ext)) {
-            return json_encode(['code' => 401, 'message' => '只能上传jpg,jpeg,png,gif格式的图片']);
-        }
-        if ($size > $max_size || !$size) {
-            return json_encode(['code' => 402, 'message' => '图片最大为2M']);
-        }
-
-        $path = $file->store('chat');
-        if ($path) {
-            return json_encode(['code' => 200, 'message' => 'OK', 'data' => '/upload/' . $path]);
-        } else {
-            return json_encode(['code' => 403, 'message' => '图片上传失败']);
-        }
+        return $this->tool->uploadImg($file, 'chat');
     }
 }

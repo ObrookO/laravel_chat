@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Model\FriendsModel;
 use App\Http\Model\NewsModel;
 use App\Http\Model\UserModel;
-use App\Http\Tools\Common;
+use App\Http\Tools\Tool;
 use Illuminate\Http\Request;
 
 use ErrorException;
@@ -22,7 +22,7 @@ class NewsController extends Controller
         '10100003' => ' 已拒绝您的好友申请',
     ];
 
-    public function __construct(UserModel $userModel, NewsModel $newsModel, FriendsModel $friendsModel, Common $common)
+    public function __construct(UserModel $userModel, NewsModel $newsModel, FriendsModel $friendsModel, Tool $common)
     {
         $this->user_model = $userModel;
         $this->news_model = $newsModel;

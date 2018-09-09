@@ -19,6 +19,9 @@ Route::group(['middleware' => 'login'], function () {
         Route::resource('news', 'NewsController', ['only' => ['index', 'store']]);
     });
 
+    Route::resource('users', 'UserController');
+    Route::post('/users/avatar', 'UserController@uploadAvatar')->name('users.avatar');
+
     //  处理好友请求
     Route::post('/news/process/request', 'NewsController@processFriendRequest')->name('news.process_request');
 

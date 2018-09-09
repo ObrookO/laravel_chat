@@ -21,10 +21,9 @@ class FriendController extends Controller
      */
     public function getFriends()
     {
-        //  查询当前用户的好友
         $login_user = session('userInfo');
         $my_friends = $this->friends_model->getFriends(['user1' => $login_user->id, 'friends.status' => '1']);
 
-        return view('friends', ['my_friends' => $my_friends,]);
+        return view('user.friends', ['my_friends' => $my_friends,]);
     }
 }
