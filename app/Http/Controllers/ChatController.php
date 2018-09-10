@@ -90,6 +90,7 @@ class ChatController extends Controller
                         'send_to_username' => $user_info->username,
                         'send_by_id' => $login_user->id,
                         'send_by_username' => $login_user->username,
+                        'send_by_user_avatar' => $login_user->avatar,
                         'content' => $request->data,
                     ]
                 ]);

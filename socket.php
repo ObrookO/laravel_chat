@@ -58,6 +58,7 @@ class Chat
                 $this->$func($send_to_fd, json_encode([
                     'send_by_id' => $data['send_by_id'],
                     'send_by_username' => $data['send_by_username'],
+                    'send_by_user_avatar' => $data['send_by_user_avatar'] ? $data['send_by_user_avatar'] : '',
                     'send_to_id' => $data['send_to_id'],
                     'send_to_username' => $data['send_to_username'],
                     'content' => $data['content'],

@@ -272,11 +272,12 @@
                         send_to_username: res.data.send_to_username,
                         send_by_id: res.data.send_by_id,
                         send_by_username: res.data.send_by_username,
+                        send_by_user_avatar: res.data.send_by_user_avatar,
                         content: message,
                         news_type: 10100004
                     }));
                     var html = '<div class="chat-message right">' +
-                        '<img class="message-avatar" src="{{ session('userInfo')->avatar ? session('userInfo')->avatar : '/img/a1.jpg' }}" alt="">' +
+                        '<img class="message-avatar" src="{{ session('userInfo')->avatar ? session('userInfo')->avatar : '/img/a3.jpg' }}" alt="">' +
                         '<div class="message" style="text-align: left;">' +
                         '<span class="message-content">' + message + '</span>' +
                         '</div>' +

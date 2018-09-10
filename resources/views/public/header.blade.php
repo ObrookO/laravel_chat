@@ -212,7 +212,7 @@
                             $('.chat-news-alert').removeClass('hide').addClass('in');
                         } else {
                             var html = '<div class="chat-message left">' +
-                                '<img class="message-avatar" src="{{ isset($avatar) ? $avatar : '/img/a4.jpg' }}" alt="">' +
+                                '<img class="message-avatar" src="' + (data.send_by_user_avatar ? data.send_by_user_avatar : '/img/a3.jpg') + '" alt="">' +
                                 '<div class="message">' +
                                 '<span class="message-content">' + data.content + '</span>' +
                                 '</div>' +
