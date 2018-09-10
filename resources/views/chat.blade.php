@@ -121,14 +121,14 @@
                                     @forelse($records as $k=>$v)
                                         @if($v->news_from == $user_id)
                                             <div class="chat-message left">
-                                                <img class="message-avatar" src="/img/a4.jpg" alt="">
+                                                <img class="message-avatar" src="{{ $avatar ? $avatar : '/img/a3.jpg' }}" alt="">
                                                 <div class="message">
                                                     <span class="message-content">{!! $v->message  !!}</span>
                                                 </div>
                                             </div>
                                         @else
                                             <div class="chat-message right">
-                                                <img class="message-avatar" src="/img/a1.jpg" alt="">
+                                                <img class="message-avatar" src="{{ session('userInfo')->avatar ? session('userInfo')->avatar : '/img/a1.jpg' }}" alt="">
                                                 <div class="message" style="text-align: left;">
                                                     <span class="message-content">{!! $v->message  !!}</span>
                                                 </div>
@@ -276,7 +276,7 @@
                         news_type: 10100004
                     }));
                     var html = '<div class="chat-message right">' +
-                        '<img class="message-avatar" src="/img/a1.jpg" alt="">' +
+                        '<img class="message-avatar" src="{{ session('userInfo')->avatar ? session('userInfo')->avatar : '/img/a1.jpg' }}" alt="">' +
                         '<div class="message" style="text-align: left;">' +
                         '<span class="message-content">' + message + '</span>' +
                         '</div>' +

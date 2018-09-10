@@ -84,7 +84,8 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="{{ route('users.edit',['id'=>session('userInfo')->id]) }}"><img class="img-circle" height="40" width="40" src="{{ session('userInfo')->avatar ? session('userInfo')->avatar : '/img/a3.jpg' }}" alt=""></a>
+                        <a href="{{ route('users.edit',['id'=>session('userInfo')->id]) }}"><img class="img-circle" height="40" width="40"
+                                                                                                 src="{{ session('userInfo')->avatar ? session('userInfo')->avatar : '/img/a3.jpg' }}" alt=""></a>
                     </li>
                     <li>
                         <a href="/logout">
@@ -148,7 +149,7 @@
                             <a href="javascript:;">
                                 <div class="col-sm-4">
                                     <div class="text-center">
-                                        <img alt="image" class="user-avatar img-circle m-t-xs img-responsive" src="/img/a3.jpg">
+                                        <img alt="image" height="100" width="100" class="user-avatar img-circle m-t-xs" src="">
                                     </div>
                                 </div>
                                 <div class="col-sm-8">
@@ -211,7 +212,7 @@
                             $('.chat-news-alert').removeClass('hide').addClass('in');
                         } else {
                             var html = '<div class="chat-message left">' +
-                                '<img class="message-avatar" src="/img/a4.jpg" alt="">' +
+                                '<img class="message-avatar" src="{{ isset($avatar) ? $avatar : '/img/a4.jpg' }}" alt="">' +
                                 '<div class="message">' +
                                 '<span class="message-content">' + data.content + '</span>' +
                                 '</div>' +
@@ -301,8 +302,8 @@
                 dataType: 'json',
                 success: function (res) {
                     if (res.code == 200) {
-                        res.data.avatar ? $('.user-avatar').attr('src', res.data.avatart) : '';
-                        res.data.motto ? $('.user-motto').text(res.data.motto) : '';
+                        res.data.avatar ? $('.user-avatar').attr('src', res.data.avatar) : $('.user-avatar').attr('src', '/img/a3.jpg');
+                        res.data.motto ? $('.user-motto').text(res.data.motto) : $('.user-motto').text('天王盖地虎，小鸡炖蘑菇');
 
                         if (res.data.can) {
                             $('.make-friend-button').show();

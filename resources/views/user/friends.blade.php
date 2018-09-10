@@ -22,7 +22,7 @@
                             <a href="/chat/{{ $friend->user2 }}">
                                 <div class="col-sm-4">
                                     <div class="text-center">
-                                        <img alt="image" class="img-circle m-t-xs img-responsive" src="{{ !empty($friend->avatar) ? $friend->avatar: '/img/a3.jpg'}}">
+                                        <img alt="image" height="100" width="100" class="img-rounded m-t-xs" src="{{ !empty($friend->avatar) ? $friend->avatar: '/img/a3.jpg'}}">
                                     </div>
                                 </div>
                                 <div class="col-sm-8">

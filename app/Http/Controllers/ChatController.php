@@ -46,10 +46,11 @@ class ChatController extends Controller
                 return view('chat', [
                     'user_id' => $user_id,
                     'username' => $user_info->username,
+                    'avatar' => $user_info->avatar,
                     'records' => $chat_records
                 ]);
             } else {
-                return view('errors.404', ['message' => '只有好友才能发送消息哟']);
+                return view('errors.404', ['message' => '该用户还不是您的好友']);
             }
 
         } else {
