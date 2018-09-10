@@ -60,7 +60,7 @@ class Tool
         }
 
         $size = $file->getSize();
-        $ext = $file->getClientOriginalExtension();
+        $ext = strtolower($file->getClientOriginalExtension());
         if (!in_array($ext, $allow_ext)) {
             return json_encode(['code' => 402, 'message' => '图片格式错误']);
         }
