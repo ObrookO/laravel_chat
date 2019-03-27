@@ -31,14 +31,14 @@ class PublicController extends Controller
 
             $user_info = $this->user_model->getUserInfo(['username' => $request->username]);
             if ($user_info) {
-                if (decrypt($user_info->password) != $request->password) {
-                    return json_encode(['code' => 401, 'message' => '密码错误']);
+                if ($user_info->password != md5($request->password)) {
+                    return response()->json(['code' => 401, 'message' => '密码错误']);
                 } else {
                     session(['is_login' => true, 'userInfo' => $user_info]);
-                    return json_encode(['code' => 200, 'message' => 'OK']);
+                    return response()->json(['code' => 200, 'message' => 'OK']);
                 }
             } else {
-                return json_encode(['code' => 400, 'message' => '用户不存在']);
+                return response()->json(['code' => 400, 'message' => '用户不存在']);
             }
         }
     }
@@ -61,11 +61,11 @@ class PublicController extends Controller
                 'password.regex' => '密码由数字、字母、_ 组成，长度在6-16之间',
             ]);
 
-            $id = $this->user_model->newUser(['username' => $request->username, 'password' => encrypt($request->password), 'created_at' => time()]);
+            $id = $this->user_model->newUser(['username' => $request->username, 'password' => md5($request->password), 'created_at' => time()]);
             if ($id) {
-                return json_encode(['code' => 200, 'message' => 'OK']);
+                return response()->json(['code' => 200, 'message' => 'OK']);
             } else {
-                return json_encode(['code' => 403, 'message' => '用户注册失败']);
+                return response()->json(['code' => 403, 'message' => '用户注册失败']);
             }
         }
     }

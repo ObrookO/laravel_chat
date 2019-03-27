@@ -53,26 +53,26 @@ class Tool
     public function uploadImg($file, $store_path, $allow_ext = ['jpeg', 'jpg', 'png', 'gif'], $max_size = 2 * 1024 * 1024)
     {
         if (!$file) {
-            return json_encode(['code' => 400, 'message' => '请上传图片']);
+            return response()->json(['code' => 400, 'message' => '请上传图片']);
         }
         if (empty($allow_ext) || !is_array($allow_ext)) {
-            return json_encode(['code' => 401, 'message' => '参数错误']);
+            return response()->json(['code' => 401, 'message' => '参数错误']);
         }
 
         $size = $file->getSize();
         $ext = strtolower($file->getClientOriginalExtension());
         if (!in_array($ext, $allow_ext)) {
-            return json_encode(['code' => 402, 'message' => '图片格式错误']);
+            return response()->json(['code' => 402, 'message' => '图片格式错误']);
         }
         if ($size > $max_size || !$size) {
-            return json_encode(['code' => 403, 'message' => '图片最大为2M']);
+            return response()->json(['code' => 403, 'message' => '图片最大为2M']);
         }
 
         $path = $file->store($store_path);
         if ($path) {
-            return json_encode(['code' => 200, 'message' => 'OK', 'data' => '/upload/' . $path]);
+            return response()->json(['code' => 200, 'message' => 'OK', 'data' => '/upload/' . $path]);
         } else {
-            return json_encode(['code' => 404, 'message' => '图片上传失败']);
+            return response()->json(['code' => 404, 'message' => '图片上传失败']);
         }
     }
 }
